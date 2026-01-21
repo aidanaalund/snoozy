@@ -651,6 +651,15 @@ int main(void)
 
 	for (;;) {
 		dk_set_led(RUN_STATUS_LED, (++blink_status) % 2);
+		
+		/* Send "Snoozy!" over NUS if connected */
+		if (current_conn) {
+			const char *msg = "Snoozy!\r\n";
+			if (bt_nus_send(NULL, msg, strlen(msg))) {
+				LOG_WRN("Failed to send Snoozy! over NUS");
+			}
+		}
+		
 		k_sleep(K_MSEC(RUN_LED_BLINK_INTERVAL));
 	}
 }
